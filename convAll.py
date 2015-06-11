@@ -424,7 +424,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             if iter % 100 == 0:
                 print 'training @ iter = ', iter
             cost_ij = train_model(minibatch_index)
-            print cost_ij
+            print 'rel2',cost_ij
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
@@ -515,7 +515,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                           (epoch, minibatch_index + 1, n_train_batches,
                            test_score * 100.,binary_test_score*100))
 
-            	if this_validation_loss < 0.01:
+            	if this_validation_loss < 1.1*best_validation_loss:
             		alpha=1.1*alpha
             		print (('Alpha augmente --> %f') % alpha)
             	else:
