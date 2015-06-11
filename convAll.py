@@ -409,7 +409,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     
     epoch = 0
     done_looping = False
-    titre = 'titre'
+    titre = 'invAll'
     while (epoch < n_epochs) and (not done_looping):
         epoch = epoch + 1
         for minibatch_index in xrange(n_train_batches):
@@ -516,10 +516,10 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                            test_score * 100.,binary_test_score*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=1.1*alpha
+            		alpha=alpha
             		print (('Alpha augmente --> %f') % alpha)
             	else:
-            		alpha=0.9*alpha
+            		alpha=alpha
             		print (('Alpha diminue --> %f') % alpha)
                 cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
 
