@@ -497,7 +497,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                     test_score = numpy.mean(test_losses)
 
                     binary_test_losses = [
-                        test_model(i)
+                        test_binary_smodel(i)
                         for i in xrange(n_test_batches)
                     ]
                     binary_test_score = numpy.mean(binary_test_losses)
