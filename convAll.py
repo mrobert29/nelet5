@@ -310,7 +310,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     #cost = layer3.negative_log_likelihood(y)
 
     alpha=1;
-    cl0=0
+    cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
     cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
     cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
     cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
@@ -433,14 +433,22 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                 # plt.show()
                 # compute zero-one loss on validation set
 
-
+                binary_layer0 = BinaryLeNetConvPoolLayer(
+                        layer0.W,
+                        layer0.b,
+                        rng,
+                        input=layer0_input,
+                        image_shape=(batch_size, 1, 28, 28),
+                        filter_shape=(nkerns[0], 1, 5, 5),
+                        poolsize=(2, 2)
+                    )
 
 
                 binary_layer1 = BinaryLeNetConvPoolLayer(
                         layer1.W,
                         layer1.b,
                         rng,
-                        input=layer0.output,
+                        input=binary_layer0.output,
                         image_shape=(batch_size, nkerns[0], 12, 12),
                         filter_shape=(nkerns[1], nkerns[0], 5, 5),
                         poolsize=(2, 2)
