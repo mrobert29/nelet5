@@ -308,12 +308,29 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
 
     # the cost we minimize during training is the NLL of the model
     #cost = layer3.negative_log_likelihood(y)
-    cost=(layer3.negative_log_likelihood(y)+0.1*(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()+0.1*(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()+0.1*(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum())
+
+    alpha=1;
+    cl0=0
+    cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
+    cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
+    cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
+
+
+    cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
 
     # create a function to compute the mistakes that are made by the model
     test_model = theano.function(
         [index],
         layer3.errors(y),
+        givens={
+            x: test_set_x[index * batch_size: (index + 1) * batch_size],
+            y: test_set_y[index * batch_size: (index + 1) * batch_size]
+        }
+    )
+
+    test_binary_model = theano.function(
+        [index],
+        layer3_binary.errors(y),
         givens={
             x: test_set_x[index * batch_size: (index + 1) * batch_size],
             y: test_set_y[index * batch_size: (index + 1) * batch_size]
@@ -411,10 +428,14 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 100 == 0:
+            if (iter + 1) % 10 == 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
+
+
+
+
                 binary_layer1 = BinaryLeNetConvPoolLayer(
                         layer1.W,
                         layer1.b,
@@ -448,7 +469,6 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                                      in xrange(n_valid_batches)]
                 this_binary_validation_loss = numpy.mean(binary_validation_losses)
 
-
                 validation_losses = [validate_model(i) for i
                                      in xrange(n_valid_batches)]
                 this_validation_loss = numpy.mean(validation_losses)
@@ -475,10 +495,40 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                         for i in xrange(n_test_batches)
                     ]
                     test_score = numpy.mean(test_losses)
+
+                    binary_test_losses = [
+                        test_model(i)
+                        for i in xrange(n_test_batches)
+                    ]
+                    binary_test_score = numpy.mean(binary_test_losses)
+
                     print(('     epoch %i, minibatch %i/%i, test error of '
-                           'best model %f %%') %
+                           'best model %f %%  - binary test error of bet model %f %%') %
                           (epoch, minibatch_index + 1, n_train_batches,
-                           test_score * 100.))
+                           test_score * 100.,binary_test_score*100))
+
+            	if this_validation_loss < 0.015:
+            		alpha=1.1*alpha
+            		print (('Alpha augmente --> %f') % alpha)
+            	else:
+            		alpha=0.9*alpha
+            		print (('Alpha diminue --> %f') % alpha)
+                cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
+
+                train_model = theano.function(
+                        [index],
+				        cost,
+				        updates=updates,
+				        givens={
+				            x: train_set_x[index * batch_size: (index + 1) * batch_size],
+				            y: train_set_y[index * batch_size: (index + 1) * batch_size]
+				        },
+				        on_unused_input='ignore',
+                    )
+
+
+
+
 
             if patience <= iter:
                 done_looping = True
