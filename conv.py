@@ -507,7 +507,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                           (epoch, minibatch_index + 1, n_train_batches,
                            test_score * 100.,binary_test_score*100))
 
-            	if this_validation_loss < 0.015:
+            	if this_validation_loss < 0.01:
             		alpha=1.1*alpha
             		print (('Alpha augmente --> %f') % alpha)
             	else:
