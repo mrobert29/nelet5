@@ -113,6 +113,72 @@ class LeNetConvPoolLayer(object):
         # store parameters of this layer
         self.params = [self.W, self.b]
 
+class BinaryLeNetConvPoolLayer(object):
+    """Pool Layer of a convolutional network """
+
+    def __init__(self,W,b, rng, input, filter_shape, image_shape, poolsize=(2, 2)):
+        """
+        Allocate a LeNetConvPoolLayer with shared variable internal parameters.
+
+        :type rng: numpy.random.RandomState
+        :param rng: a random number generator used to initialize weights
+
+        :type input: theano.tensor.dtensor4
+        :param input: symbolic image tensor, of shape image_shape
+
+        :type filter_shape: tuple or list of length 4
+        :param filter_shape: (number of filters, num input feature maps,
+                              filter height, filter width)
+
+        :type image_shape: tuple or list of length 4
+        :param image_shape: (batch size, num input feature maps,
+                             image height, image width)
+
+        :type poolsize: tuple or list of length 2
+        :param poolsize: the downsampling (pooling) factor (#rows, #cols)
+        """
+
+        assert image_shape[1] == filter_shape[1]
+        self.input = input
+
+        # there are "num input feature maps * filter height * filter width"
+        # inputs to each hidden unit
+        fan_in = numpy.prod(filter_shape[1:])
+        # each unit in the lower layer receives a gradient from:
+        # "num output feature maps * filter height * filter width" /
+        #   pooling size
+        fan_out = (filter_shape[0] * numpy.prod(filter_shape[2:]) /
+                   numpy.prod(poolsize))
+        # initialize weights with random weights
+        W_bound = numpy.sqrt(6. / (fan_in + fan_out))
+        self.W = 0.01*(W>0.005)
+        # initialize the baises b as a vector of n_out 0s
+        self.b = b
+
+        # convolve input feature maps with filters
+        conv_out = conv.conv2d(
+            input=input,
+            filters=self.W,
+            filter_shape=filter_shape,
+            image_shape=image_shape
+        )
+
+        # downsample each feature map individually, using maxpooling
+        pooled_out = downsample.max_pool_2d(
+            input=conv_out,
+            ds=poolsize,
+            ignore_border=True
+        )
+
+        # add the bias term. Since the bias is a vector (1D array), we first
+        # reshape it to a tensor of shape (1, n_filters, 1, 1). Each bias will
+        # thus be broadcasted across mini-batches and feature map
+        # width & height
+        self.output = T.tanh(pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
+
+        # store parameters of this layer
+        self.params = [self.W, self.b]
+
 
 def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                     dataset='mnist.pkl.gz',
@@ -242,7 +308,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
 
     # the cost we minimize during training is the NLL of the model
     #cost = layer3.negative_log_likelihood(y)
-    cost=(layer3.negative_log_likelihood(y)+0.1*(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()+0.1*(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum())
+    cost=(layer3.negative_log_likelihood(y)+0.1*(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()+0.1*(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()+0.1*(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum())
 
     # create a function to compute the mistakes that are made by the model
     test_model = theano.function(
@@ -345,17 +411,31 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 50 == 0:
-                plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
-                plt.show()
+            if (iter + 1) % 100 == 0:
+                # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
+                # plt.show()
                 # compute zero-one loss on validation set
+                binary_layer1 = BinaryLeNetConvPoolLayer(
+                        layer1.W,
+                        layer1.b,
+                        rng,
+                        input=layer0.output,
+                        image_shape=(batch_size, nkerns[0], 12, 12),
+                        filter_shape=(nkerns[1], nkerns[0], 5, 5),
+                        poolsize=(2, 2)
+                    )
 
+                # the HiddenLayer being fully-connected, it operates on 2D matrices of
+                # shape (batch_size, num_pixels) (i.e matrix of rasterized images).
+                # This will generate a matrix of shape (batch_size, nkerns[1] * 4 * 4),
+                # or (500, 50 * 4 * 4) = (500, 800) with the default values.
+                binary_layer2_input = binary_layer1.output.flatten(2)
 
                 layer2_binary=Binary_HiddenLayer(
                         layer2.W,
                         layer2.b,
                         rng,
-                        input=layer2_input,
+                        input=binary_layer2_input,
                         n_in=nkerns[1] * 4 * 4,
                         n_out=500,
                         activation=T.tanh
