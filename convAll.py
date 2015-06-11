@@ -409,7 +409,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     
     epoch = 0
     done_looping = False
-    
+    titre = 'titre'
     while (epoch < n_epochs) and (not done_looping):
         epoch = epoch + 1
         for minibatch_index in xrange(n_train_batches):
@@ -424,7 +424,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             if iter % 100 == 0:
                 print 'training @ iter = ', iter
             cost_ij = train_model(minibatch_index)
-            print 'rel2',cost_ij
+            print titre,cost_ij
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 

@@ -390,6 +390,16 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     # TRAIN MODEL #
     ###############
     print '... training'
+    titre = 'titre'
+
+
+    fichier = open(titre,"a")
+    fichier.write('---- New Train ---- \n' %
+                ())
+
+    fichier.close()
+
+
     # early-stopping parameters
     patience = 10000  # look as this many examples regardless
     patience_increase = 2  # wait this much longer when a new best is
@@ -424,11 +434,11 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             if iter % 100 == 0:
                 print 'training @ iter = ', iter
             cost_ij = train_model(minibatch_index)
-            print 'rel1',cost_ij
+            print titre,cost_ij
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 100 == 0:
+            if (iter + 1) % 2 == 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
@@ -509,10 +519,26 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
 
             	if this_validation_loss < 1.1*best_validation_loss:
             		alpha=1.1*alpha
-            		print (('Alpha augmente --> %f') % alpha)
+                        alpha_status = 'inc'
+                        print (('Alpha augmente --> %f') % alpha)
             	else:
             		alpha=0.9*alpha
             		print (('Alpha diminue --> %f') % alpha)
+                        alpha_status='dec'
+
+
+                fichier = open(titre,"a")
+                fichier.write('epoch %i - minibatch %i/%i - c : %f - a %f %s - t %f - '
+                            't %f %%  - bt  %f %% \n' %
+                            (epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,
+                            (time.clock()-start_time)/60,test_score * 100.,binary_test_score*100))
+
+                fichier.close()
+
+
+
+
+
                 cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
 
                 train_model = theano.function(
