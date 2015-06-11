@@ -390,7 +390,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     # TRAIN MODEL #
     ###############
     print '... training'
-    titre = 'titre'
+    titre = 'inv'
 
 
     fichier = open(titre,"a")
@@ -518,11 +518,11 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                            test_score * 100.,binary_test_score*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=1.1*alpha
+            		alpha=alpha
                         alpha_status = 'inc'
                         print (('Alpha augmente --> %f') % alpha)
             	else:
-            		alpha=0.9*alpha
+            		alpha=alpha
             		print (('Alpha diminue --> %f') % alpha)
                         alpha_status='dec'
 
