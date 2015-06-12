@@ -32,6 +32,7 @@ import theano
 import theano.tensor as T
 from theano.tensor.signal import downsample
 from theano.tensor.nnet import conv
+import cPickle
 
 from logistic_sgd import BinaryLogisticRegression,LogisticRegression, load_data
 from mlp import HiddenLayer, Binary_HiddenLayer
@@ -393,6 +394,8 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     titre = 'inv'
 
 
+    
+
     fichier = open(titre,"a")
     fichier.write('---- New Train ---- \n' %
                 ())
@@ -438,7 +441,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 100 == 0:
+            if (iter + 1) % 3 == 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
@@ -518,11 +521,11 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                            test_score * 100.,binary_test_score*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=alpha
+            		alpha=1.1*alpha
                         alpha_status = 'inc'
                         print (('Alpha augmente --> %f') % alpha)
             	else:
-            		alpha=alpha
+            		alpha=0.9*alpha
             		print (('Alpha diminue --> %f') % alpha)
                         alpha_status='dec'
 
@@ -535,7 +538,9 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
 
                 fichier.close()
 
-
+                f = file(titre+'-'+str(iter+1)+'-p', 'wb')
+                cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
+                f.close()
 
 
 
