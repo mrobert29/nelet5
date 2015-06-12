@@ -26,13 +26,16 @@ if nb==1:
 					a.insert(2,l)
 	plt.hist(a, 100, normed=1, facecolor='g', alpha=0.75)
 	plt.title('layer 1')
-if nb==0:	
+
+if nb==0:
+	compteur=0;	
 	print 'analysing layer0...'
 	a=[]
 	for i in params[6].get_value():
 		for j in i:
 			for k in j:
 				for l in k:
+					compteur=compteur+1
 					a.insert(2,l)
 	plt.hist(a, 100, normed=1, facecolor='g', alpha=0.75)
 	plt.title('layer 0')
@@ -40,4 +43,4 @@ if nb==0:
 plt.show()
 
 
-print 'a'
+print compteur
