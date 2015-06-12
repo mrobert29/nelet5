@@ -184,6 +184,9 @@ class BinaryLeNetConvPoolLayer(object):
 def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                     dataset='mnist.pkl.gz',
                     nkerns=[20, 50], batch_size=500):
+
+
+	
     """ Demonstrates lenet on MNIST dataset
 
     :type learning_rate: float
@@ -199,7 +202,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     :type nkerns: list of ints
     :param nkerns: number of kernels on each layer
     """
-
+    titre=raw_input('Id de la simulation  :\n')
     rng = numpy.random.RandomState(23455)
 
     datasets = load_data(dataset)
@@ -391,7 +394,6 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     # TRAIN MODEL #
     ###############
     print '... training'
-    titre = 'var'
 
 
     
