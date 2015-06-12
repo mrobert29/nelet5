@@ -112,10 +112,7 @@ class LogisticRegression(object):
 
         # parameters of the model
         self.params = [self.W, self.b]
-
-    def cf(self,y):
-            return 10*T.sum(T.sum(self.W**2*(self.W-1)**2))-T.mean(T.log(self.p_y_given_x)[T.arange(y.shape[0]), y])
-          
+      
 
     def negative_log_likelihood(self, y):
         """Return the mean of the negative log-likelihood of the prediction

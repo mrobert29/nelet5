@@ -37,6 +37,7 @@ import cPickle
 from logistic_sgd import BinaryLogisticRegression,LogisticRegression, load_data
 from mlp import HiddenLayer, Binary_HiddenLayer
 import matplotlib.pyplot as plt
+from test import test
 
 
 
@@ -203,6 +204,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     :param nkerns: number of kernels on each layer
     """
     titre=raw_input('Id de la simulation  :\n')
+    dep=input('premiere couche a etre binarisee :\n')
     rng = numpy.random.RandomState(23455)
 
     datasets = load_data(dataset)
@@ -315,9 +317,18 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
 
     alpha=1;
     cl0=0
-    cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
-    cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
-    cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
+    cl1=0
+    cl2=0
+    cl3=0
+
+    if dep<=3:
+        cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
+    if dep<=2:
+        cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
+    if dep<=1:
+        cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
+    if dep==0:
+        cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
 
 
     cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
@@ -432,65 +443,32 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             #pylab.hist(layer3.W.get_value(), bins=50)
             #pylab.show()
             
-            
 
             iter = (epoch - 1) * n_train_batches + minibatch_index
 
             if iter % 100 == 0:
                 print 'training @ iter = ', iter
             cost_ij = train_model(minibatch_index)
-            print titre,cost_ij
+            print titre,dep,' - ',cost_ij
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 100 == 0:
+            if (iter + 1) % 2 == 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
-
-
-
-
-                binary_layer1 = BinaryLeNetConvPoolLayer(
-                        layer1.W,
-                        layer1.b,
-                        rng,
-                        input=layer0.output,
-                        image_shape=(batch_size, nkerns[0], 12, 12),
-                        filter_shape=(nkerns[1], nkerns[0], 5, 5),
-                        poolsize=(2, 2)
-                    )
-
-                # the HiddenLayer being fully-connected, it operates on 2D matrices of
-                # shape (batch_size, num_pixels) (i.e matrix of rasterized images).
-                # This will generate a matrix of shape (batch_size, nkerns[1] * 4 * 4),
-                # or (500, 50 * 4 * 4) = (500, 800) with the default values.
-                binary_layer2_input = binary_layer1.output.flatten(2)
-
-                layer2_binary=Binary_HiddenLayer(
-                        layer2.W,
-                        layer2.b,
-                        rng,
-                        input=binary_layer2_input,
-                        n_in=nkerns[1] * 4 * 4,
-                        n_out=500,
-                        activation=T.tanh
-                    )
-
-                layer3_binary=BinaryLogisticRegression(layer3.W,layer3.b,input=layer2_binary.output, n_in=500, n_out=10)
-
-
-                binary_validation_losses = [validate_binary_model(i) for i
-                                     in xrange(n_valid_batches)]
-                this_binary_validation_loss = numpy.mean(binary_validation_losses)
+                f = file(titre+'-'+str(iter+1)+'-p', 'wb')
+                cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
+                f.close()
+                this_binary_validation_loss=test(titre+'-'+str(iter+1)+'-p',dep)
 
                 validation_losses = [validate_model(i) for i
                                      in xrange(n_valid_batches)]
                 this_validation_loss = numpy.mean(validation_losses)
-                print('epoch %i, minibatch %i/%i, validation error %f, binary validation error %f %%' %
+                print('epoch %i, minibatch %i/%i, validation error %f, binary validation error %s %%' %
                       (epoch, minibatch_index + 1, n_train_batches,
                        this_validation_loss * 100.,
-                       this_binary_validation_loss * 100.))
+                       this_binary_validation_loss*100))
 
                 # if we got the best validation score until now
                 if this_validation_loss < best_validation_loss:
@@ -533,16 +511,14 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
 
 
                 fichier = open(titre+'-p',"a")
-                fichier.write('%s - epoch %i - minibatch %i/%i - c : %f - a %f %s - t %f - '
+                fichier.write('%s - %i - epoch %i - minibatch %i/%i - c : %f - a %f %s - t %f - '
                             't %f %%  - bt  %f %% \n' %
-                            (titre,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,
+                            (titre,dep,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,
                             (time.clock()-start_time)/60,test_score * 100.,binary_test_score*100))
 
                 fichier.close()
 
-                f = file(titre+'-'+str(iter+1)+'-p', 'wb')
-                cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
-                f.close()
+                
 
 
 
