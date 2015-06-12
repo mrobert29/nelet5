@@ -533,9 +533,9 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
 
 
                 fichier = open(titre+'-p',"a")
-                fichier.write('epoch %i - minibatch %i/%i - c : %f - a %f %s - t %f - '
+                fichier.write('%s - epoch %i - minibatch %i/%i - c : %f - a %f %s - t %f - '
                             't %f %%  - bt  %f %% \n' %
-                            (epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,
+                            (titre,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,
                             (time.clock()-start_time)/60,test_score * 100.,binary_test_score*100))
 
                 fichier.close()
