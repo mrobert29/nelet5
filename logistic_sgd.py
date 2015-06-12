@@ -202,7 +202,7 @@ class BinaryLogisticRegression(object):
         """
         # start-snippet-1
         # initialize with 0 the weights W as a matrix of shape (n_in, n_out)
-        self.W = 0.01*(W>0.005)
+        self.W = 0.01*(W>0)-0.01*(W<0)
         # initialize the baises b as a vector of n_out 0s
         self.b = b
 

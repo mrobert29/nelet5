@@ -151,7 +151,7 @@ class BinaryLeNetConvPoolLayer(object):
                    numpy.prod(poolsize))
         # initialize weights with random weights
         W_bound = numpy.sqrt(6. / (fan_in + fan_out))
-        self.W = 0.01*(W>0.005)
+        self.W = 0.01*(W>0)-0.01*(W<0)
         # initialize the baises b as a vector of n_out 0s
         self.b = b
 

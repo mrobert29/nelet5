@@ -151,7 +151,7 @@ class Binary_HiddenLayer(object):
         #        We have no info for other function, so we use the same as
         #        tanh.
         
-        self.W = 0.01*(W>0)
+        self.W = 0.01*(W>0)-0.01*(W<0)
         self.b = b
 
         lin_output = T.dot(input, self.W) + self.b
