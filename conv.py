@@ -457,7 +457,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
-                f = file(titre+'-'+str(iter+1)+'-p', 'wb')
+                f = file(titre+'-p', 'wb')
                 cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
                 f.close()
                 this_binary_validation_loss=test(titre+'-'+str(iter+1)+'-p',dep)
@@ -494,11 +494,11 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                            test_score * 100.,this_binary_validation_loss*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=1.1*alpha
+            		alpha=1.05*alpha
                         alpha_status = 'inc'
                         print (('Alpha augmente --> %f') % alpha)
             	else:
-            		alpha=0.9*alpha
+            		alpha=0.95*alpha
             		print (('Alpha diminue --> %f') % alpha)
                         alpha_status='dec'
 
