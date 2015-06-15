@@ -245,8 +245,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     layer3 = LogisticRegression(input=layer2.output, n_in=500, n_out=10)
     #layer3_binary = LogisticRegression(input=layer2.output, n_in=500, n_out=10)
     #layer3_binary.W=1*(layer3_binary.W>0.5)
-    layer3_binary=BinaryLogisticRegression(layer3.W,layer3.b,input=layer2.output, n_in=500, n_out=10)
-
+    
     # the cost we minimize during training is the NLL of the model
     #cost = layer3.negative_log_likelihood(y)
 
