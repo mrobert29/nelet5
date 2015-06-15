@@ -460,7 +460,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                 f = file(titre+'-p', 'wb')
                 cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
                 f.close()
-                this_binary_validation_loss=test(titre+'-'+str(iter+1)+'-p',dep)
+                this_binary_validation_loss=test(titre+'-p',dep)
 
                 validation_losses = [validate_model(i) for i
                                      in xrange(n_valid_batches)]
