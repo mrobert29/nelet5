@@ -488,24 +488,17 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                         for i in xrange(n_test_batches)
                     ]
                     test_score = numpy.mean(test_losses)
-
-                    binary_test_losses = [
-                        test_binary_model(i)
-                        for i in xrange(n_test_batches)
-                    ]
-                    binary_test_score = numpy.mean(binary_test_losses)
-
                     print(('     epoch %i, minibatch %i/%i, test error of '
                            'best model %f %%  - binary test error of bet model %f %%') %
                           (epoch, minibatch_index + 1, n_train_batches,
-                           test_score * 100.,binary_test_score*100))
+                           test_score * 100.,this_binary_validation_loss*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=alpha
+            		alpha=1.1*alpha
                         alpha_status = 'inc'
                         print (('Alpha augmente --> %f') % alpha)
             	else:
-            		alpha=alpha
+            		alpha=0.9*alpha
             		print (('Alpha diminue --> %f') % alpha)
                         alpha_status='dec'
 

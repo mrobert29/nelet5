@@ -43,4 +43,4 @@ if nb==0:
 plt.show()
 
 
-print compteur
+print couchempteur

@@ -104,6 +104,7 @@ class HiddenLayer(object):
 ###---TEST---###
 
 def test(titre,dep):
+	print 'debut du test de binarisation - a partir de la couche ',dep
 	rng = numpy.random.RandomState(23455)
 	batch_size=500
 	n_epochs=200
