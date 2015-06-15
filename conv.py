@@ -410,11 +410,11 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                            test_score * 100.,this_binary_validation_loss*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=1.05*alpha
+            		alpha=2*alpha
                         alpha_status = 'inc'
                         print (('Alpha augmente --> %f') % alpha)
             	else:
-            		alpha=0.95*alpha
+            		alpha=1/3*alpha
             		print (('Alpha diminue --> %f') % alpha)
                         alpha_status='dec'
 
