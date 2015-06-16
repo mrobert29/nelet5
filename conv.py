@@ -119,7 +119,7 @@ class LeNetConvPoolLayer(object):
 
 def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                     dataset='mnist.pkl.gz',
-                    nkerns=[20, 50], batch_size=500):
+                    nkerns=[100, 250], batch_size=500):
 
 
 	
@@ -194,7 +194,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
         filter_shape=(nkerns[0], 1, 5, 5),
         poolsize=(2, 2)
     )
-
+    #size = nkerns[0]*5*5 = 500
 
     #outputLayer0=layer0.output
     #array=outputLayer0.eval({x: test_set_x[0:500, :].eval()})
@@ -224,6 +224,9 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
         poolsize=(2, 2)
     )
 
+    #size = nkerns[1]*nkerns[0]*5*5 = 500*50 = 25000
+
+
     # the HiddenLayer being fully-connected, it operates on 2D matrices of
     # shape (batch_size, num_pixels) (i.e matrix of rasterized images).
     # This will generate a matrix of shape (batch_size, nkerns[1] * 4 * 4),
@@ -239,10 +242,11 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
         activation=T.tanh
     )
 
-
+    #size=n_in*n_out (def is 400 000)
 
     # classify the values of the fully-connected sigmoidal layer
     layer3 = LogisticRegression(input=layer2.output, n_in=500, n_out=10)
+    #size = n_in*n-out (def is 5000)
     #layer3_binary = LogisticRegression(input=layer2.output, n_in=500, n_out=10)
     #layer3_binary.W=1*(layer3_binary.W>0.5)
     
@@ -254,7 +258,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     cl1=0
     cl2=0
     cl3=0
-
+    
     if dep<=3:
         cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
     if dep<=2:
@@ -265,7 +269,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
         cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
 
 
-    cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
+    cost=(0*layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
 
     # create a function to compute the mistakes that are made by the model
     test_model = theano.function(
@@ -373,10 +377,10 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
-                f = file(titre+'sauv-p', 'wb')
+                f = file(titre+'sauv'+str(iter+1)+'-p', 'wb')
                 cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
                 f.close()
-                this_binary_validation_loss=test(titre+'sauv-p',dep)
+                this_binary_validation_loss=test(titre+'sauv'+str(iter+1)+'-p',dep)
 
                 validation_losses = [validate_model(i) for i
                                      in xrange(n_valid_batches)]

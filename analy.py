@@ -11,18 +11,21 @@ f.close()
 if nb==3:
 	print 'analysing layer3...'
 	plt.hist(params[0].get_value(), 50, normed=1, facecolor='g', alpha=0.75)
+	print params[0].get_value()
 	plt.title('layer 3')
 if nb==2:
 	print 'analysing layer2...'
 	plt.hist(params[2].get_value(), 50, normed=1, facecolor='g', alpha=0.75)
 	plt.title('layer 2')
-if nb==1:	
+if nb==1:
+	compteur=0
 	print 'analysing layer1...'
 	a=[]
 	for i in params[4].get_value():
 		for j in i:
 			for k in j:
 				for l in k:
+					compteur=compteur+1
 					a.insert(2,l)
 	plt.hist(a, 100, normed=1, facecolor='g', alpha=0.75)
 	plt.title('layer 1')
@@ -43,4 +46,4 @@ if nb==0:
 plt.show()
 
 
-print couchempteur
+print compteur
