@@ -117,7 +117,7 @@ class LeNetConvPoolLayer(object):
 
 
 
-def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
+def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                     dataset='mnist.pkl.gz',
                     nkerns=[20, 50], batch_size=500):
 
@@ -410,7 +410,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
                            test_score * 100.,this_binary_validation_loss*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=2*alpha
+            		alpha=1.5*alpha
                         alpha_status = 'inc'
                         print (('Alpha augmente --> %f') % alpha)
             	else:
