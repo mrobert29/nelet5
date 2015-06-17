@@ -119,7 +119,7 @@ class LeNetConvPoolLayer(object):
 
 def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                     dataset='mnist.pkl.gz',
-                    nkerns=[100, 250 ], batch_size=500):
+                    nkerns=[20, 50], batch_size=500):
 
 
 	
@@ -259,15 +259,23 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     cl2=0
     cl3=0
     
-    if dep<=3:
-        cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
-    if dep<=2:
-        cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
-    if dep<=1:
-        cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
-    if dep==0:
-        cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
+    # if dep<=3:
+    #    cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
+    #if dep<=2:
+    #    cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
+    #if dep<=1:
+    #    cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
+    #if dep==0:
+    #    cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
 
+    if dep<=3:
+        cl3=(((layer3.W)**2)*(layer3.W-0.02)**2).sum()
+    if dep<=2:
+        cl2=(((layer2.W)**2)*(layer2.W-0.02)**2).sum()
+    if dep<=1:
+        cl1=(((layer1.W)**2)*(layer1.W-0.02)**2).sum()
+    if dep==0:
+        cl0=(((layer0.W)**2)*(layer0.W-0.02)**2).sum()
 
     cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
 
