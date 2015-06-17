@@ -108,7 +108,7 @@ def test(titre,dep):
 	rng = numpy.random.RandomState(23455)
 	batch_size=500
 	n_epochs=200
-	nkerns=[200, 50]
+	nkerns=[100, 250]
 
 
 	f = file(titre, 'rb')
@@ -116,23 +116,23 @@ def test(titre,dep):
 	f.close()
 
 
-	#if dep<=3:
-	#	params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
-	#if dep<=2:
-	#	params[2]=0.01*(params[2]>0)-0.01*(params[2]<0)
-	#if dep<=1:
-	#	params[4]=0.01*(params[4]>0)-0.01*(params[4]<0)
-	#if dep==0:
-	#	params[6]=0.01*(params[6]>0)-0.01*(params[6]<0)	
-
 	if dep<=3:
-		params[0]=0.02*(params[0]>0)-0.0*(params[0]<0)	
+		params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
 	if dep<=2:
-		params[2]=0.02*(params[2]>0)-0.0*(params[2]<0)
+		params[2]=0.01*(params[2]>0)-0.01*(params[2]<0)
 	if dep<=1:
-		params[4]=0.02*(params[4]>0)-0.0*(params[4]<0)
+		params[4]=0.01*(params[4]>0)-0.01*(params[4]<0)
 	if dep==0:
-		params[6]=0.02*(params[6]>0)-0.0*(params[6]<0)
+		params[6]=0.01*(params[6]>0)-0.01*(params[6]<0)	
+
+	#if dep<=3:
+	#	params[0]=0.02*(params[0]>0)-0.0*(params[0]<0)	
+	#if dep<=2:
+	#	params[2]=0.02*(params[2]>0)-0.0*(params[2]<0)
+	#if dep<=1:
+	#	params[4]=0.02*(params[4]>0)-0.0*(params[4]<0)
+	#if dep==0:
+	#	params[6]=0.02*(params[6]>0)-0.0*(params[6]<0)
 
 
 	dataset='mnist.pkl.gz'

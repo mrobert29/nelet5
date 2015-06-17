@@ -119,7 +119,7 @@ class LeNetConvPoolLayer(object):
 
 def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                     dataset='mnist.pkl.gz',
-                    nkerns=[200, 50], batch_size=500):
+                    nkerns=[100, 250], batch_size=500):
 
 
 	
@@ -259,23 +259,23 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     cl2=0
     cl3=0
     
-    # if dep<=3:
-    #    cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
-    #if dep<=2:
-    #    cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
-    #if dep<=1:
-    #    cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
-    #if dep==0:
-    #    cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
-
     if dep<=3:
-        cl3=(((layer3.W)**2)*(layer3.W-0.02)**2).sum()
+        cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
     if dep<=2:
-        cl2=(((layer2.W)**2)*(layer2.W-0.02)**2).sum()
+        cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
     if dep<=1:
-        cl1=(((layer1.W)**2)*(layer1.W-0.02)**2).sum()
+        cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
     if dep==0:
-        cl0=(((layer0.W)**2)*(layer0.W-0.02)**2).sum()
+        cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
+
+    #if dep<=3:
+    #    cl3=(((layer3.W)**2)*(layer3.W-0.02)**2).sum()
+    #if dep<=2:
+    #    cl2=(((layer2.W)**2)*(layer2.W-0.02)**2).sum()
+    #if dep<=1:
+    #    cl1=(((layer1.W)**2)*(layer1.W-0.02)**2).sum()
+    #if dep==0:
+    #    cl0=(((layer0.W)**2)*(layer0.W-0.02)**2).sum()
 
     cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
 
@@ -364,6 +364,18 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     epoch = 0
     done_looping = False
     
+    titreCharge='TAM24sauv1300-p'
+
+    f = file(titreharge, 'rb')
+    params = cPickle.load(f)
+    f.close()
+
+    layer0.W=params[6]
+    layer1.W=params[4]
+    layer2.W=params[2]
+    layer1.W=params[0]
+
+
     while (epoch < n_epochs) and (not done_looping):
         epoch = epoch + 1
         for minibatch_index in xrange(n_train_batches):
