@@ -108,7 +108,7 @@ def test(titre,dep):
 	rng = numpy.random.RandomState(23455)
 	batch_size=500
 	n_epochs=200
-	nkerns=[20, 50]
+	nkerns=[200, 50]
 
 
 	f = file(titre, 'rb')
