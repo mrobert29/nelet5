@@ -108,7 +108,7 @@ def test(titre,dep):
 	rng = numpy.random.RandomState(23455)
 	batch_size=500
 	n_epochs=200
-	nkerns=[20, 50]
+	nkerns=[100, 50]
 
 
 	f = file(titre, 'rb')
@@ -145,7 +145,7 @@ def test(titre,dep):
 	y = T.ivector('y')  # the lab
 
 
-	print '... building model'
+	print '... building binary model'
 
 	layer0_input = x.reshape((batch_size, 1, 28, 28))
 
@@ -185,7 +185,7 @@ def test(titre,dep):
 	layer3=LogisticRegression(params[0],params[1],input=layer2.output, n_in=500, n_out=10)
 
 
-	print '... testing'
+	print '... testing binay'
 	test_model = theano.function(
 	    [index],
 	    layer3.errors(y),
