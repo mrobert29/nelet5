@@ -119,7 +119,7 @@ class LeNetConvPoolLayer(object):
 
 def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                     dataset='mnist.pkl.gz',
-                    nkerns=[100, 250], batch_size=500):
+                    nkerns=[160, 50], batch_size=500):
 
 
 	
@@ -364,16 +364,16 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     epoch = 0
     done_looping = False
     
-    titreCharge='TAM25sauv1300-p'
-
-    f = file(titreCharge, 'rb')
-    params = cPickle.load(f)
-    f.close()
-
-    layer0.W=params[6]
-    layer1.W=params[4]
-    layer2.W=params[2]
-    layer1.W=params[0]
+    #titreCharge='TAM25sauv1300-p'
+#
+ #   f = file(titreCharge, 'rb')
+  #  params = cPickle.load(f)
+   # f.close()
+#
+ #   layer0.W=params[6]
+  #  layer1.W=params[4]
+   # layer2.W=params[2]
+    #layer1.W=params[0]
 
 
     while (epoch < n_epochs) and (not done_looping):
