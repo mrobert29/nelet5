@@ -117,9 +117,9 @@ class LeNetConvPoolLayer(object):
 
 
 
-def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
+def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                     dataset='mnist.pkl.gz',
-                    nkerns=[300, 200], batch_size=500):
+                    nkerns=[20,50],batch_size=500):
 
 
 	
@@ -138,8 +138,32 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     :type nkerns: list of ints
     :param nkerns: number of kernels on each layer
     """
+    #nkerns=[0,0]
     titre=raw_input('Id de la simulation  :\n')
-    dep=input('premiere couche a etre binarisee :\n')
+    dep=raw_input('premiere couche a etre binarisee (default : 1)\n')
+    nkerns[0]=raw_input('dimension de la premiere couche (default : 20)\n')
+    nkerns[1]=raw_input('dimension de la deuxieme couche (default : 50)\n')
+    learning_rate=raw_input('learning rate (default : 0.1)\n')
+    alpha_rate=raw_input('alpha rate (default 1.1)\n')
+
+    if dep=='':
+        dep=1
+    if nkerns[0]=='':
+        nkerns[0]=20
+    if nkerns[1]=='':
+        nkerns[1]=50
+    if learning_rate=='':
+        learning_rate=0.1
+    if alpha_rate=='':
+        alpha_rate=1.1
+
+    dep=int(dep)
+    nkerns[0]=int(nkerns[0])
+    nkerns[1]=int(nkerns[1])
+    learning_rate=float(learning_rate)
+    alpha_rate=float(alpha_rate)
+
+
     rng = numpy.random.RandomState(23455)
 
     datasets = load_data(dataset)
@@ -438,20 +462,20 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                            test_score * 100.,this_binary_validation_loss*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
-            		alpha=1.5*alpha
+            		alpha=alpha_rate*alpha
                         alpha_status = 'inc'
                         print (('Alpha augmente --> %f') % alpha)
             	else:
-            		alpha=1/3*alpha
+            		alpha=1/alpha_rate*alpha
             		print (('Alpha diminue --> %f') % alpha)
                         alpha_status='dec'
 
 
                 fichier = open(titre+'-p',"a")
-                fichier.write('%s - %i - epoch %i - minibatch %i/%i - c : %2.4  f - a %5.0f %s - nkerns %3.0f - %3.0f LR - %1.2f- t %1.0f - '
+                fichier.write('%s - %i - epoch %i - minibatch %i/%i - c : %2.4f - a %5.0f %s - LR : %1.3f - nkerns %3.0f - %3.0f - t %1.0f - '
                             't %2.2f %%  - bt  %2.2f %% \n' %
-                            (titre,dep,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,nkerns[0],
-                            nkerns[1],learning_rate,(time.clock()-start_time)/60,test_score * 100.,this_binary_validation_loss*100))
+                            (titre,dep,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,learning_rate,nkerns[0],
+                            nkerns[1],(time.clock()-start_time)/60,test_score*100.,this_binary_validation_loss*100))
 
                 fichier.close()
 

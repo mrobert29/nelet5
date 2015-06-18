@@ -108,12 +108,14 @@ def test(titre,dep):
 	rng = numpy.random.RandomState(23455)
 	batch_size=500
 	n_epochs=200
-	nkerns=[160, 50]
+	
 
 
 	f = file(titre, 'rb')
 	params = cPickle.load(f)
 	f.close()
+
+	nkerns=[params[6].get_value().size/25,params[4].get_value().size/params[6].get_value().size]
 
 
 	if dep<=3:
@@ -192,7 +194,7 @@ def test(titre,dep):
 	layer3=LogisticRegression(params[0],params[1],input=layer2.output, n_in=500, n_out=10)
 
 
-	print '... testing binay'
+	print '... testing binary'
 	test_model = theano.function(
 	    [index],
 	    layer3.errors(y),
