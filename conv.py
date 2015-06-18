@@ -119,7 +119,7 @@ class LeNetConvPoolLayer(object):
 
 def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                     dataset='mnist.pkl.gz',
-                    nkerns=[160, 50], batch_size=500):
+                    nkerns=[120, 40], batch_size=500):
 
 
 	
@@ -253,7 +253,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     # the cost we minimize during training is the NLL of the model
     #cost = layer3.negative_log_likelihood(y)
 
-    alpha=10000;
+    alpha=1;
     cl0=0
     cl1=0
     cl2=0
@@ -364,7 +364,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     epoch = 0
     done_looping = False
     
-    titreCharge='TAM35sauv2300-p'
+    """titreCharge='TAM35sauv2300-p'
     f = file(titreCharge, 'rb')
     params = cPickle.load(f)
     f.close()
@@ -376,7 +376,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     layer0.b=params[7]
     layer1.b=params[5]
     layer2.b=params[3]
-    layer1.b=params[1]
+    layer1.b=params[1]"""
 
 
 
