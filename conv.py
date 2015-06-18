@@ -117,7 +117,7 @@ class LeNetConvPoolLayer(object):
 
 
 
-def evaluate_lenet5(learning_rate=1, n_epochs=500,
+def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
                     dataset='mnist.pkl.gz',
                     nkerns=[160, 50], batch_size=500):
 
@@ -364,16 +364,20 @@ def evaluate_lenet5(learning_rate=1, n_epochs=500,
     epoch = 0
     done_looping = False
     
-    #titreCharge='TAM25sauv1300-p'
-#
- #   f = file(titreCharge, 'rb')
-  #  params = cPickle.load(f)
-   # f.close()
-#
- #   layer0.W=params[6]
-  #  layer1.W=params[4]
-   # layer2.W=params[2]
-    #layer1.W=params[0]
+    titreCharge='TAM35sauv2400-p'
+    f = file(titreCharge, 'rb')
+    params = cPickle.load(f)
+    f.close()
+    layer0.W=params[6]
+    layer1.W=params[4]
+    layer2.W=params[2]
+    layer1.W=params[0]
+
+    layer0.b=params[7]
+    layer1.b=params[5]
+    layer2.b=params[3]
+    layer1.b=params[1]
+
 
 
     while (epoch < n_epochs) and (not done_looping):
@@ -444,10 +448,10 @@ def evaluate_lenet5(learning_rate=1, n_epochs=500,
 
 
                 fichier = open(titre+'-p',"a")
-                fichier.write('%s - %i - epoch %i - minibatch %i/%i - c : %f - a %f %s - t %f - '
-                            't %f %%  - bt  %f %% \n' %
-                            (titre,dep,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,
-                            (time.clock()-start_time)/60,test_score * 100.,this_binary_validation_loss*100))
+                fichier.write('%s - %i - epoch %i - minibatch %i/%i - c : %2.4  f - a %5.0f %s - nkerns %3.0f - %3.0f LR - %1.2f- t %1.0f - '
+                            't %2.2f %%  - bt  %2.2f %% \n' %
+                            (titre,dep,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,nkerns[0],
+                            nkerns[1],learning_rate,(time.clock()-start_time)/60,test_score * 100.,this_binary_validation_loss*100))
 
                 fichier.close()
 
