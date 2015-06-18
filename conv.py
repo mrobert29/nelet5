@@ -364,7 +364,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     epoch = 0
     done_looping = False
     
-    titreCharge='TAM35sauv2400-p'
+    titreCharge='TAM35sauv2300-p'
     f = file(titreCharge, 'rb')
     params = cPickle.load(f)
     f.close()
