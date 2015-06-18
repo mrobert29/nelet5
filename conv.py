@@ -253,7 +253,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=500,
     # the cost we minimize during training is the NLL of the model
     #cost = layer3.negative_log_likelihood(y)
 
-    alpha=1;
+    alpha=10000;
     cl0=0
     cl1=0
     cl2=0
