@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import cPickle
 
-	titre=raw_input('Nom du fichier a analyser  :\n')
+titre=raw_input('Nom du fichier a analyser  :\n')
 nb=input('Numero de la couche a analyser  :\n')
 
 f = file(titre, 'rb')

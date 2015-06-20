@@ -283,13 +283,22 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     cl2=0
     cl3=0
     
-    if dep<=3:
+    # if dep<=3:
+    #     cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
+    # if dep<=2:
+    #     cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
+    # if dep<=1:
+    #     cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
+    # if dep==0:
+        # cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
+
+    if dep==3:
         cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
-    if dep<=2:
+    if dep>=2:
         cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
-    if dep<=1:
+    if dep>=1:
         cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
-    if dep==0:
+    if dep>=0:
         cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
 
     #if dep<=3:

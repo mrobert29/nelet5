@@ -118,13 +118,22 @@ def test(titre,dep):
 	nkerns=[params[6].get_value().size/25,params[4].get_value().size/params[6].get_value().size]
 
 
-	if dep<=3:
+	# if dep<=3:
+	# 	params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
+	# if dep<=2:
+	# 	params[2]=0.01*(params[2]>0)-0.01*(params[2]<0)
+	# if dep<=1:
+	# 	params[4]=0.01*(params[4]>0)-0.01*(params[4]<0)
+	# if dep==0:
+	# 	params[6]=0.01*(params[6]>0)-0.01*(params[6]<0)	
+
+	if dep==3:
 		params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
-	if dep<=2:
+	if dep>=2:
 		params[2]=0.01*(params[2]>0)-0.01*(params[2]<0)
-	if dep<=1:
+	if dep>=1:
 		params[4]=0.01*(params[4]>0)-0.01*(params[4]<0)
-	if dep==0:
+	if dep>=0:
 		params[6]=0.01*(params[6]>0)-0.01*(params[6]<0)	
 
 	#if dep<=3:

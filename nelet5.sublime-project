@@ -3,6 +3,9 @@
 	[
 		{
 			"path": "."
+		},
+		{
+			"path": "/home/alcyon/Stage/pyt/transfert"
 		}
 	]
 }
