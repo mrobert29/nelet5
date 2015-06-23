@@ -115,9 +115,9 @@ def test(titre,dep):
 	params = cPickle.load(f)
 	f.close()
 
-	nkerns=[params[6].get_value().size/25,params[4].get_value().size/params[6].get_value().size]
+	nkerns=[params[6].get_value().size/25/3,params[4].get_value().size*3/params[6].get_value().size]
 
-
+	
 	if dep<=3:
 		params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
 	if dep<=2:
@@ -147,7 +147,7 @@ def test(titre,dep):
 
 
 	dataset='mnist.pkl.gz'
-	datasets = load_data(dataset)
+	datasets = load_data()
 
 	train_set_x, train_set_y = datasets[0]
 	valid_set_x, valid_set_y = datasets[1]
