@@ -287,7 +287,7 @@ class BinaryLogisticRegression(object):
             raise NotImplementedError()
 
 
-def load_data(dataset):
+def load_data():
     ''' Loads the dataset
 
     :type dataset: string
@@ -297,7 +297,7 @@ def load_data(dataset):
     #############
     # LOAD DATA #
     #############
-
+    """
     # Download the MNIST dataset if it is not present
     data_dir, data_file = os.path.split(dataset)
     if data_dir == "" and not os.path.isfile(dataset):
@@ -318,13 +318,34 @@ def load_data(dataset):
         )
         print 'Downloading data from %s' % origin
         urllib.urlretrieve(origin, dataset)
-
+    """
     print '... loading data'
 
     # Load the dataset
-    f = gzip.open(dataset, 'rb')
-    train_set, valid_set, test_set = cPickle.load(f)
+    f = open('dataset/test_batch', 'rb')
+    test_set = cPickle.load(f)
     f.close()
+    f = open('dataset/data_batch_1', 'rb')
+    train_set = cPickle.load(f)
+    f.close()
+    f = open('dataset/data_batch_1', 'rb')
+    train_set1 = cPickle.load(f)
+    f.close()
+    f = open('dataset/data_batch_2', 'rb')
+    train_set2 = cPickle.load(f)
+    f.close()
+    f = open('dataset/data_batch_3', 'rb')
+    train_set3 = cPickle.load(f)
+    f.close()
+    f = open('dataset/data_batch_4', 'rb')
+    train_set4 = cPickle.load(f)
+    f.close()
+    f = open('dataset/data_batch_5', 'rb')
+    valid_set = cPickle.load(f)
+    f.close()
+    train_set['labels']=numpy.concatenate((train_set1['labels'],train_set2['labels'],train_set3['labels'],train_set4['labels']))
+    train_set['data']=numpy.concatenate((train_set1['data'],train_set2['data'],train_set3['data'],train_set4['data']))
+
     #train_set, valid_set, test_set format: tuple(input, target)
     #input is an numpy.ndarray of 2 dimensions (a matrix)
     #witch row's correspond to an example. target is a
@@ -341,7 +362,10 @@ def load_data(dataset):
         is needed (the default behaviour if the data is not in a shared
         variable) would lead to a large decrease in performance.
         """
-        data_x, data_y = data_xy
+        #data_x, data_y = data_xy
+        data_x=data_xy['data']
+        data_y=data_xy['labels']
+
         shared_x = theano.shared(numpy.asarray(data_x,
                                                dtype=theano.config.floatX),
                                  borrow=borrow)

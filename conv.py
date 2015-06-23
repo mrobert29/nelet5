@@ -9,7 +9,7 @@ This implementation simplifies the model in the following ways:
 
  - LeNetConvPool doesn't implement location-specific gain and bias parameters
  - LeNetConvPool doesn't implement pooling by average, it implements pooling
-   by max.
+   by max. 
  - Digit classification is implemented with a logistic regression rather than
    an RBF network
  - LeNet5 was not fully-connected convolutions at second layer
@@ -118,7 +118,7 @@ class LeNetConvPoolLayer(object):
 
 
 def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
-                    dataset='mnist.pkl.gz',
+                    dataset='cifar10',
                     nkerns=[20,50],batch_size=500):
 
 
@@ -141,19 +141,21 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     #nkerns=[0,0]
     titre=raw_input('Id de la simulation  :\n')
     dep=raw_input('premiere couche a etre binarisee (default : 1)\n')
-    nkerns[0]=raw_input('dimension de la premiere couche (default : 20)\n')
-    nkerns[1]=raw_input('dimension de la deuxieme couche (default : 50)\n')
-    learning_rate=raw_input('learning rate (default : 0.1)\n')
+    nkerns[0]=raw_input('dimension de la premiere couche (default : 64)\n')
+    nkerns[1]=raw_input('dimension de la deuxieme couche (default : 64)\n')
+    learning_rate=raw_input('learning rate (default : 0.01)\n')
     alpha_rate=raw_input('alpha rate (default 1.1)\n')
 
+    if titre=='':
+        titre='current'
     if dep=='':
-        dep=1
+        dep=-1
     if nkerns[0]=='':
-        nkerns[0]=20
+        nkerns[0]=64
     if nkerns[1]=='':
-        nkerns[1]=50
+        nkerns[1]=64
     if learning_rate=='':
-        learning_rate=0.1
+        learning_rate=0.01
     if alpha_rate=='':
         alpha_rate=1.1
 
@@ -166,7 +168,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
 
     rng = numpy.random.RandomState(23455)
 
-    datasets = load_data(dataset)
+    datasets = load_data()
 
     train_set_x, train_set_y = datasets[0]
     valid_set_x, valid_set_y = datasets[1]
@@ -205,7 +207,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     # Reshape matrix of rasterized images of shape (batch_size, 28 * 28)
     # to a 4D tensor, compatible with our LeNetConvPoolLayer
     # (28, 28) is the size of MNIST images.
-    layer0_input = x.reshape((batch_size, 1, 28, 28))
+    layer0_input = x.reshape((batch_size, 3,32, 32))
 
     # Construct the first convolutional pooling layer:
     # filtering reduces the image size to (28-5+1 , 28-5+1) = (24, 24)
@@ -214,8 +216,8 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     layer0 = LeNetConvPoolLayer(
         rng,
         input=layer0_input,
-        image_shape=(batch_size, 1, 28, 28),
-        filter_shape=(nkerns[0], 1, 5, 5),
+        image_shape=(batch_size, 3, 32, 32),
+        filter_shape=(nkerns[0], 3, 5, 5),
         poolsize=(2, 2)
     )
     #size = nkerns[0]*5*5 = 500
@@ -243,7 +245,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     layer1 = LeNetConvPoolLayer(
         rng,
         input=layer0.output,
-        image_shape=(batch_size, nkerns[0], 12, 12),
+        image_shape=(batch_size, nkerns[0], 14, 14),
         filter_shape=(nkerns[1], nkerns[0], 5, 5),
         poolsize=(2, 2)
     )
@@ -261,7 +263,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     layer2 = HiddenLayer(
         rng,
         input=layer2_input,
-        n_in=nkerns[1] * 4 * 4,
+        n_in=nkerns[1] * 5 * 5,
         n_out=500,
         activation=T.tanh
     )
@@ -277,7 +279,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     # the cost we minimize during training is the NLL of the model
     #cost = layer3.negative_log_likelihood(y)
 
-    alpha=1;
+    alpha=0;
     cl0=0
     cl1=0
     cl2=0
@@ -310,7 +312,8 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     #if dep==0:
     #    cl0=(((layer0.W)**2)*(layer0.W-0.02)**2).sum()
 
-    cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
+    cost=(layer3.negative_log_likelihood(y))
+    #+alpha*(cl0+cl1+cl2+cl3))
 
     # create a function to compute the mistakes that are made by the model
     test_model = theano.function(
@@ -430,14 +433,14 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 100 == 0:
+            if (iter + 100) % 3== 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
-                f = file(titre+'sauv'+str(iter+1)+'-p', 'wb')
-                cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
-                f.close()
-                this_binary_validation_loss=test(titre+'sauv'+str(iter+1)+'-p',dep)
+                # f = file(titre+'sauv'+str(iter+1)+'-p', 'wb')
+                # cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
+                # f.close()
+                #this_binary_validation_loss=test(titre+'sauv'+str(iter+1)+'-p',dep)
 
                 validation_losses = [validate_model(i) for i
                                      in xrange(n_valid_batches)]
@@ -445,7 +448,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                 print('epoch %i, minibatch %i/%i, validation error %f, binary validation error %s %%' %
                       (epoch, minibatch_index + 1, n_train_batches,
                        this_validation_loss * 100.,
-                       this_binary_validation_loss*100))
+                       this_validation_loss*100))
 
                 # if we got the best validation score until now
                 if this_validation_loss < best_validation_loss:
@@ -468,7 +471,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                     print(('     epoch %i, minibatch %i/%i, test error of '
                            'best model %f %%  - binary test error of bet model %f %%') %
                           (epoch, minibatch_index + 1, n_train_batches,
-                           test_score * 100.,this_binary_validation_loss*100))
+                           test_score * 100.,this_validation_loss*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
             		alpha=alpha_rate*alpha
@@ -484,7 +487,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                 fichier.write('%s - %i - epoch %i - minibatch %i/%i - c : %2.4f - a %5.0f %s - LR : %1.3f - nkerns %3.0f - %3.0f - t %1.0f - '
                             't %2.2f %%  - bt  %2.2f %% \n' %
                             (titre,dep,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,learning_rate,nkerns[0],
-                            nkerns[1],(time.clock()-start_time)/60,test_score*100.,this_binary_validation_loss*100))
+                            nkerns[1],(time.clock()-start_time)/60,test_score*100.,this_validation_loss*100))
 
                 fichier.close()
 
