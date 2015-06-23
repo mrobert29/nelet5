@@ -281,29 +281,29 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     # the cost we minimize during training is the NLL of the model
     #cost = layer3.negative_log_likelihood(y)
 
-    alpha=0;
+    alpha=1;
     cl0=0
     cl1=0
     cl2=0
     cl3=0
     
-    # if dep<=3:
-    #     cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
-    # if dep<=2:
-    #     cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
-    # if dep<=1:
-    #     cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
-    # if dep==0:
-        # cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
-
-    if dep==3:
+    if dep<=3:
         cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
-    if dep>=2:
+    if dep<=2:
         cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
-    if dep>=1:
+    if dep<=1:
         cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
-    if dep>=0:
+    if dep==0:
         cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
+
+    # if dep==3:
+    #     cl3=(((layer3.W+0.01)**2)*(layer3.W-0.01)**2).sum()
+    # if dep>=2:
+    #     cl2=(((layer2.W+0.01)**2)*(layer2.W-0.01)**2).sum()
+    # if dep>=1:
+    #     cl1=(((layer1.W+0.01)**2)*(layer1.W-0.01)**2).sum()
+    # if dep>=0:
+    #     cl0=(((layer0.W+0.01)**2)*(layer0.W-0.01)**2).sum()
 
     #if dep<=3:
     #    cl3=(((layer3.W)**2)*(layer3.W-0.02)**2).sum()
@@ -314,8 +314,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     #if dep==0:
     #    cl0=(((layer0.W)**2)*(layer0.W-0.02)**2).sum()
 
-    cost=(layer3.negative_log_likelihood(y))
-    #+alpha*(cl0+cl1+cl2+cl3))
+    cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
 
     # create a function to compute the mistakes that are made by the model
     test_model = theano.function(
@@ -435,14 +434,14 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 100) % 100== 0:
+            if (iter + 1) % 3== 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
-                # f = file(titre+'sauv'+str(iter+1)+'-p', 'wb')
-                # cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
-                # f.close()
-                #this_binary_validation_loss=test(titre+'sauv'+str(iter+1)+'-p',dep)
+                f = file(titre+'sauv'+str(iter+1)+'-p', 'wb')
+                cPickle.dump(params, f, protocol=cPickle.HIGHEST_PROTOCOL)
+                f.close()
+                this_binary_validation_loss=test(titre+'sauv'+str(iter+1)+'-p',dep)
 
                 validation_losses = [validate_model(i) for i
                                      in xrange(n_valid_batches)]
@@ -450,7 +449,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                 print('epoch %i, minibatch %i/%i, validation error %f, binary validation error %s %%' %
                       (epoch, minibatch_index + 1, n_train_batches,
                        this_validation_loss * 100.,
-                       this_validation_loss*100))
+                       this_binary_validation_loss*100))
 
                 # if we got the best validation score until now
                 if this_validation_loss < best_validation_loss:
@@ -473,7 +472,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                     print(('     epoch %i, minibatch %i/%i, test error of '
                            'best model %f %%  - binary test error of bet model %f %%') %
                           (epoch, minibatch_index + 1, n_train_batches,
-                           test_score * 100.,this_validation_loss*100))
+                           test_score * 100.,this_binary_validation_loss*100))
 
             	if this_validation_loss < 1.1*best_validation_loss:
             		alpha=alpha_rate*alpha
@@ -489,7 +488,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                 fichier.write('%s - %i - epoch %i - minibatch %i/%i - c : %2.4f - a %5.0f %s - LR : %1.3f - nkerns %3.0f - %3.0f - t %1.0f - '
                             't %2.2f %%  - bt  %2.2f %% \n' %
                             (titre,dep,epoch, minibatch_index + 1, n_train_batches,this_validation_loss,alpha,alpha_status,learning_rate,nkerns[0],
-                            nkerns[1],(time.clock()-start_time)/60,test_score*100.,this_validation_loss*100))
+                            nkerns[1],(time.clock()-start_time)/60,test_score*100.,this_binary_validation_loss*100))
 
                 fichier.close()
 
