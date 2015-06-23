@@ -433,7 +433,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 100) % 3== 0:
+            if (iter + 100) % 100== 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
