@@ -39,7 +39,7 @@ def relu(x):
     return theano.tensor.switch(x<0, 0, x)
 class HiddenLayer(object):
     def __init__(self, rng, input, n_in, n_out, W=None, b=None,
-                 activation=relu):
+                 activation=T.tanh):
         """
         Typical hidden layer of a MLP: units are fully-connected and have
         sigmoidal activation function. Weight matrix W is of shape (n_in,n_out)
