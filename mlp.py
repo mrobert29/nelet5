@@ -35,9 +35,11 @@ from logistic_sgd import LogisticRegression, load_data
 
 
 # start-snippet-1
+def relu(x):
+    return theano.tensor.switch(x<0, 0, x)
 class HiddenLayer(object):
     def __init__(self, rng, input, n_in, n_out, W=None, b=None,
-                 activation=T.tanh):
+                 activation=relu):
         """
         Typical hidden layer of a MLP: units are fully-connected and have
         sigmoidal activation function. Weight matrix W is of shape (n_in,n_out)

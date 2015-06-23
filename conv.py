@@ -40,6 +40,8 @@ import matplotlib.pyplot as plt
 from test import test
 
 
+def relu(x):
+    return theano.tensor.switch(x<0, 0, x)
 
 class LeNetConvPoolLayer(object):
     """Pool Layer of a convolutional network """
@@ -110,7 +112,7 @@ class LeNetConvPoolLayer(object):
         # reshape it to a tensor of shape (1, n_filters, 1, 1). Each bias will
         # thus be broadcasted across mini-batches and feature map
         # width & height
-        self.output = T.relu(pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
+        self.output = relu(pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
 
         # store parameters of this layer
         self.params = [self.W, self.b]
@@ -265,7 +267,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
         input=layer2_input,
         n_in=nkerns[1] * 5 * 5,
         n_out=500,
-        activation=T.relu
+        activation=relu
     )
 
     #size=n_in*n_out (def is 400 000)
