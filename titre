@@ -1,0 +1,5 @@
+---- New Train ---- 
+epoch 1 - minibatch 2/100 - cost : 0.593400 - alpha 1.100000 inc - time 1.156269 - test 61.490000 %  - btest  83.000000 % 
+epoch 1 - minibatch 4/100 - cost : 0.457700 - alpha 1.210000 inc - time 2.328022 - test 46.630000 %  - btest  57.380000 % 
+---- New Train ---- 
+epoch 1 - minibatch 2/100 - c : 0.593400 - a 1.100000 inc - t 1.160949 - t 61.490000 %  - bt  83.000000 % 
