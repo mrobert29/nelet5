@@ -112,7 +112,7 @@ class LeNetConvPoolLayer(object):
         # reshape it to a tensor of shape (1, n_filters, 1, 1). Each bias will
         # thus be broadcasted across mini-batches and feature map
         # width & height
-        self.output = relu(pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
+        self.output = T.tanh(pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
 
         # store parameters of this layer
         self.params = [self.W, self.b]
@@ -252,6 +252,15 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
         poolsize=(2, 2)
     )
 
+
+    layer1_bis = LeNetConvPoolLayer(
+        rng,
+        input=layer1.output,
+        image_shape=(batch_size, nkerns[0], 14, 14),
+        filter_shape=(nkerns[1], nkerns[0], 5, 5),
+        poolsize=(2, 2)
+    )
+
     #size = nkerns[1]*nkerns[0]*5*5 = 500*50 = 25000
 
 
@@ -259,7 +268,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     # shape (batch_size, num_pixels) (i.e matrix of rasterized images).
     # This will generate a matrix of shape (batch_size, nkerns[1] * 4 * 4),
     # or (500, 50 * 4 * 4) = (500, 800) with the default values.
-    layer2_input = layer1.output.flatten(2)
+    layer2_input = layer1_bis.output.flatten(2)
 
     # construct a fully-connected sigmoidal layer
     layer2 = HiddenLayer(
@@ -267,7 +276,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
         input=layer2_input,
         n_in=nkerns[1] * 5 * 5,
         n_out=500,
-        activation=relu
+        activation=T.tanh
     )
 
     #size=n_in*n_out (def is 400 000)
@@ -434,7 +443,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 100== 0:
+            if (iter + 1) % 10== 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
