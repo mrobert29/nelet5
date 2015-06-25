@@ -115,26 +115,26 @@ def test(titre,dep):
 	params = cPickle.load(f)
 	f.close()
 
-	nkerns=[params[6].get_value().size/25,params[4].get_value().size/params[6].get_value().size]
+	nkerns=[params[6].get_value().size/25/3,params[4].get_value().size*3/params[6].get_value().size]
 
-
-	# if dep<=3:
-	# 	params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
-	# if dep<=2:
-	# 	params[2]=0.01*(params[2]>0)-0.01*(params[2]<0)
-	# if dep<=1:
-	# 	params[4]=0.01*(params[4]>0)-0.01*(params[4]<0)
-	# if dep==0:
-	# 	params[6]=0.01*(params[6]>0)-0.01*(params[6]<0)	
-
-	if dep==3:
+	
+	if dep<=3:
 		params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
-	if dep>=2:
+	if dep<=2:
 		params[2]=0.01*(params[2]>0)-0.01*(params[2]<0)
-	if dep>=1:
+	if dep<=1:
 		params[4]=0.01*(params[4]>0)-0.01*(params[4]<0)
-	if dep>=0:
+	if dep==0:
 		params[6]=0.01*(params[6]>0)-0.01*(params[6]<0)	
+
+	# if dep==3:
+	# 	params[0]=0.01*(params[0]>0)-0.01*(params[0]<0)	
+	# if dep>=2:
+	# 	params[2]=0.01*(params[2]>0)-0.01*(params[2]<0)
+	# if dep>=1:
+	# 	params[4]=0.01*(params[4]>0)-0.01*(params[4]<0)
+	# if dep>=0:
+	# 	params[6]=0.01*(params[6]>0)-0.01*(params[6]<0)	
 
 	#if dep<=3:
 	#	params[0]=0.02*(params[0]>0)-0.0*(params[0]<0)	
@@ -147,7 +147,7 @@ def test(titre,dep):
 
 
 	dataset='mnist.pkl.gz'
-	datasets = load_data(dataset)
+	datasets = load_data()
 
 	train_set_x, train_set_y = datasets[0]
 	valid_set_x, valid_set_y = datasets[1]
@@ -165,15 +165,15 @@ def test(titre,dep):
 
 	print '... building binary model'
 
-	layer0_input = x.reshape((batch_size, 1, 28, 28))
+	layer0_input = x.reshape((batch_size, 3, 32, 32))
 
 	layer0 = LeNetConvPoolLayer(
 	    params[6],
 	    params[7],
 	    rng,
 	    input=layer0_input,
-	    image_shape=(batch_size, 1, 28, 28),
-	    filter_shape=(nkerns[0], 1, 5, 5),
+	    image_shape=(batch_size, 3, 32, 32),
+	    filter_shape=(nkerns[0], 3, 5, 5),
 	    poolsize=(2, 2)
 	)
 
@@ -183,7 +183,7 @@ def test(titre,dep):
 	    params[5],
 	    rng,
 	    input=layer0.output,
-	    image_shape=(batch_size, nkerns[0], 12, 12),
+	    image_shape=(batch_size, nkerns[0], 14, 14),
 	    filter_shape=(nkerns[1], nkerns[0], 5, 5),
 	    poolsize=(2, 2)
 	)
@@ -195,7 +195,7 @@ def test(titre,dep):
 		params[3],
 		rng,
 		input=layer2_input,
-		n_in=nkerns[1] * 4 * 4,
+		n_in=nkerns[1] * 5 * 5,
 		n_out=500,
 		activation=T.tanh
 	)
