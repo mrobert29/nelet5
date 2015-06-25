@@ -269,7 +269,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
         input=layer2_input,
         n_in=nkerns[1] * 5 * 5,
         n_out=500,
-        activation=T.tanh
+        activation=relu
     )
 
     #size=n_in*n_out (def is 400 000)
