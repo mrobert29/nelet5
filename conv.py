@@ -436,7 +436,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
             
             #print sum(sum((layer3.W.get_value()**2)*((layer3.W.get_value()-1)**2)))
 
-            if (iter + 1) % 10== 0:
+            if (iter + 1) % 100== 0:
                 # plt.hist(layer3.W.get_value(), 50, normed=1, facecolor='g', alpha=0.75)
                 # plt.show()
                 # compute zero-one loss on validation set
@@ -475,7 +475,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                            'best model %f %%  - binary test error of bet model %f %%') %
                           (epoch, minibatch_index + 1, n_train_batches,
                            test_score * 100.,this_binary_validation_loss*100))
-
+                learning_rate=learning_rate/1.1
             	if this_validation_loss < 1.1*best_validation_loss:
             		alpha=alpha_rate*alpha
                         alpha_status = 'inc'
