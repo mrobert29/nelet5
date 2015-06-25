@@ -112,7 +112,7 @@ class LeNetConvPoolLayer(object):
         # reshape it to a tensor of shape (1, n_filters, 1, 1). Each bias will
         # thus be broadcasted across mini-batches and feature map
         # width & height
-        self.output = T.tanh(pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
+        self.output = relu(pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
 
         # store parameters of this layer
         self.params = [self.W, self.b]
@@ -121,7 +121,7 @@ class LeNetConvPoolLayer(object):
 
 def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
                     dataset='cifar10',
-                    nkerns=[20,50],batch_size=500):
+                    nkerns=[32,32],batch_size=500):
 
 
 	
@@ -143,8 +143,8 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     #nkerns=[0,0]
     titre=raw_input('Id de la simulation  :\n')
     dep=raw_input('premiere couche a etre binarisee (default : 1)\n')
-    nkerns[0]=raw_input('dimension de la premiere couche (default : 64)\n')
-    nkerns[1]=raw_input('dimension de la deuxieme couche (default : 64)\n')
+    nkerns[0]=raw_input('dimension de la premiere couche (default :32)\n')
+    nkerns[1]=raw_input('dimension de la deuxieme couche (default : 32)\n')
     learning_rate=raw_input('learning rate (default : 0.01)\n')
     alpha_rate=raw_input('alpha rate (default 1.1)\n')
 
@@ -153,9 +153,9 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     if dep=='':
         dep=-1
     if nkerns[0]=='':
-        nkerns[0]=64
+        nkerns[0]=32
     if nkerns[1]=='':
-        nkerns[1]=64
+        nkerns[1]=32
     if learning_rate=='':
         learning_rate=0.01
     if alpha_rate=='':
@@ -267,7 +267,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
         input=layer2_input,
         n_in=nkerns[1] * 5 * 5,
         n_out=500,
-        activation=T.tanh
+        activation=relu
     )
 
     #size=n_in*n_out (def is 400 000)
