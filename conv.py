@@ -253,13 +253,6 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     )
 
 
-    layer1_bis = LeNetConvPoolLayer(
-        rng,
-        input=layer1.output,
-        image_shape=(batch_size, nkerns[0], 14, 14),
-        filter_shape=(nkerns[1], nkerns[0], 5, 5),
-        poolsize=(2, 2)
-    )
 
     #size = nkerns[1]*nkerns[0]*5*5 = 500*50 = 25000
 
@@ -268,7 +261,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     # shape (batch_size, num_pixels) (i.e matrix of rasterized images).
     # This will generate a matrix of shape (batch_size, nkerns[1] * 4 * 4),
     # or (500, 50 * 4 * 4) = (500, 800) with the default values.
-    layer2_input = layer1_bis.output.flatten(2)
+    layer2_input = layer1.output.flatten(2)
 
     # construct a fully-connected sigmoidal layer
     layer2 = HiddenLayer(
