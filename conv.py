@@ -354,7 +354,7 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     # create the updates list by automatically looping over all
     # (params[i], grads[i]) pairs.
     updates = [
-        (param_i, param_i - learning_rate * grad_i)
+        (param_i, param_i - learning_rate * grad_i+0.000001*((param_i - learning_rate * grad_i)<0.000001)-0.000001*((param_i - learning_rate * grad_i)>0.999999))
         for param_i, grad_i in zip(params, grads)
     ]
     train_model = theano.function(
