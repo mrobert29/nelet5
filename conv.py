@@ -354,7 +354,6 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
         (param_i, param_i - learning_rate * grad_i)
         for param_i, grad_i in zip(params, grads)
     ]
-
     train_model = theano.function(
         [index],
         cost,

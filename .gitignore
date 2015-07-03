@@ -14,4 +14,9 @@ html
 *~
 *.swp
 *-p
+<<<<<<< HEAD
 dataset/
+=======
+dataset/*
+
+>>>>>>> ae554d510398336d19bd37a35a6150c71c84a33d
