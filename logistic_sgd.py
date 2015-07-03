@@ -114,6 +114,9 @@ class LogisticRegression(object):
         self.params = [self.W, self.b]
       
 
+    def norm(self,y):
+        return (T.norm(self.p_y_given_x-y))
+
     def negative_log_likelihood(self, y):
         """Return the mean of the negative log-likelihood of the prediction
         of this model under a given target distribution.

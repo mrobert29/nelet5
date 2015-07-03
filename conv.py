@@ -497,7 +497,8 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
 
 
 
-                cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
+                #cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
+                cost=(layer3.norm(y)+alpha*(cl0+cl1+cl2+cl3))
 
                 train_model = theano.function(
                         [index],
