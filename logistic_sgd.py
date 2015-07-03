@@ -115,7 +115,7 @@ class LogisticRegression(object):
       
 
     def norm(self,y):
-        return T.sqrt(T.sum((self.p_y_given_x-y)*(self.p_y_given_x-y)))
+        return T.sum(self.p_y_given_x)
 
     def negative_log_likelihood(self, y):
         """Return the mean of the negative log-likelihood of the prediction

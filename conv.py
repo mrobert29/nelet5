@@ -316,8 +316,8 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     #if dep==0:
     #    cl0=(((layer0.W)**2)*(layer0.W-0.02)**2).sum()
 
-    #cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
-    cost=(layer3.norm(y)+alpha*(cl0+cl1+cl2+cl3))
+    cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
+    #cost=(layer3.norm(y)+alpha*(cl0+cl1+cl2+cl3))
 
     # create a function to compute the mistakes that are made by the model
     test_model = theano.function(
@@ -344,6 +344,8 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
     # create a list of gradients for all model parameters
     grads = T.grad(cost, params)
     ##grads=params;
+    
+
 
 
     # train_model is a function that updates the model parameters by
@@ -498,8 +500,8 @@ def evaluate_lenet5(learning_rate=0.1,n_epochs=500,
 
 
 
-                #cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
-                cost=(layer3.norm(y)+alpha*(cl0+cl1+cl2+cl3))
+                cost=(layer3.negative_log_likelihood(y)+alpha*(cl0+cl1+cl2+cl3))
+                #cost=(layer3.norm(y)+alpha*(cl0+cl1+cl2+cl3))
 
                 train_model = theano.function(
                         [index],
